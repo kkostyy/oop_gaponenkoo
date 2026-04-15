@@ -19,28 +19,25 @@ namespace oop_gaponenkoo
 
         public override void Kirjelda()
         {
-            Console.WriteLine($"Mina olen opetaja {Nimi} ja ma opetan: {Aine}. Vanus: {Vanus}");
+            Console.WriteLine($"Mina olen õpetaja {Nimi}, õpetan: {Aine}. Vanus: {Vanus}");
         }
 
-        public void Opeta()
+        public virtual double ArvutaPalk(int uletunnid)
         {
-            Console.WriteLine($"{Nimi} opetab ainet: {Aine}.");
+            return (Tunnitasu * TunnidNadalas * 4) + (uletunnid * Tunnitasu);
         }
 
-        public virtual double ArvutaPalk()
-        {
-            return Tunnitasu * TunnidNadalas * 4;
-        }
+        public double ArvutaPalk() => ArvutaPalk(0);
 
         public void Hinda(string hinne)
         {
-            Console.WriteLine($"Opetaja {Nimi} pani hinde: {hinne}");
+            Console.WriteLine($"Õpetaja {Nimi} pani hinde: {hinne}");
         }
     }
 
     public class Direktor : Opetaja
     {
-        public double Lisatasu { get; set; }
+        public double Lisatasu { get; set; } 
 
         public Direktor(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas, double lisatasu)
             : base(nimi, aasta, aine, tunnitasu, tunnidNadalas)
@@ -50,12 +47,14 @@ namespace oop_gaponenkoo
 
         public override void Kirjelda()
         {
-            Console.WriteLine($"Mina olen direktor {Nimi}. Opetan: {Aine}. Vanus: {Vanus}");
+            Console.WriteLine($"Mina olen direktor {Nimi}. Vanus: {Vanus}");
         }
 
-        public override double ArvutaPalk()
+        public virtual double ArvutaPalk(int uletunnid) 
         {
-            return base.ArvutaPalk() + Lisatasu;
+            double põhipalk = Tunnitasu * TunnidNadalas * 4;
+            double lisatasu = uletunnid * Tunnitasu; 
+            return põhipalk + lisatasu;
         }
     }
 }

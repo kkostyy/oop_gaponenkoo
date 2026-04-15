@@ -63,6 +63,8 @@ namespace oop_gaponenkoo
     {
         private List<Isik> inimesed = new List<Isik>();
 
+        public List<Isik> Inimesed => inimesed;
+
         public void LisaInimene(Isik isik)
         {
             inimesed.Add(isik);

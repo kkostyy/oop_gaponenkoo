@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace oop_gaponenkoo
@@ -14,7 +14,7 @@ namespace oop_gaponenkoo
             bool tooks = true;
             while (tooks)
             {
-                Console.WriteLine("\n========= KOOLIHALDUSE SUSTEEM =========");
+                Console.WriteLine("\nKOOLIHALDUSE SUSTEEM");
                 Console.WriteLine("1. Lisa opetaja");
                 Console.WriteLine("2. Lisa direktor");
                 Console.WriteLine("3. Lisa opilane");
@@ -92,11 +92,11 @@ namespace oop_gaponenkoo
 
         static Oppevorm LoeOppevorm()
         {
-            Console.WriteLine("  Oppevorm:");
-            Console.WriteLine("    1 - Paevane");
-            Console.WriteLine("    2 - Kaugope");
-            Console.WriteLine("    3 - Ekstern");
-            Console.WriteLine("    4 - Akadeemiline puhkus");
+            Console.WriteLine("Oppevorm:");
+            Console.WriteLine("1 - Paevane");
+            Console.WriteLine("2 - Kaugope");
+            Console.WriteLine("3 - Ekstern");
+            Console.WriteLine("4 - Akadeemiline puhkus");
             int v = LoeInt("  Vali (1-4): ", 1, 4);
             return (Oppevorm)(v - 1);
         }
@@ -105,10 +105,10 @@ namespace oop_gaponenkoo
         {
             Console.WriteLine("\n--- Lisa opetaja ---");
             string nimi = LoeString("  Nimi: ");
-            int aasta   = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
+            int aasta = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
             string aine = LoeString("  Aine: ");
             double tasu = LoeDouble("  Tunnitasu (EUR): ", 0.01);
-            int tunnid  = LoeInt("  Tunde nadalas: ", 1, 40);
+            int tunnid = LoeInt("  Tunde nadalas: ", 1, 40);
 
             var op = new Opetaja(nimi, aasta, aine, tasu, tunnid);
             kool.LisaInimene(op);
@@ -130,30 +130,37 @@ namespace oop_gaponenkoo
 
         static void LisaOpilane()
         {
-            Console.WriteLine("\n--- Lisa opilane ---");
-            string nimi     = LoeString("  Nimi: ");
-            int aasta       = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year);
+            Console.WriteLine("\n--- Lisa õpilane ---");
+            string nimi = LoeString("  Nimi: ");
+            int aasta = LoeInt("  Sünniaasta: ", 1900, DateTime.Now.Year);
             string koolNimi = LoeString("  Kooli nimi: ");
-            int klass       = LoeInt("  Klass (1-12): ", 1, 12);
-            Oppevorm vorm   = LoeOppevorm();
+            int klass = LoeInt("  Klass (1-12): ", 1, 12);
+            Oppevorm vorm = LoeOppevorm();
 
-            var op = new Opilane(nimi, aasta, koolNimi, klass, vorm);
+            double hinne = LoeDouble("  Keskmine hinne (0-5): ", 0);
+            int puudumised = LoeInt("  Puudumiste arv: ", 0, 500);
+
+            var op = new Opilane(nimi, aasta, koolNimi, klass, vorm, hinne, puudumised);
             kool.LisaInimene(op);
         }
 
         static void LisaYliopilane()
         {
-            Console.WriteLine("\n--- Lisa yliopilane ---");
-            string nimi     = LoeString("  Nimi: ");
-            int aasta       = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 17);
-            string koolNimi = LoeString("  Kooli/ulikooli nimi: ");
-            int kursus      = LoeInt("  Kursus (1-6): ", 1, 6);
-            Oppevorm vorm   = LoeOppevorm();
-            string eriala   = LoeString("  Eriala: ");
+            Console.WriteLine("\n--- Lisa üliõpilane ---");
+            string nimi = LoeString("  Nimi: ");
+            int aasta = LoeInt("  Sünniaasta: ", 1900, DateTime.Now.Year - 17);
+            string koolNimi = LoeString("  Ülikooli nimi: ");
+            int kursus = LoeInt("  Kursus (1-6): ", 1, 6);
+            Oppevorm vorm = LoeOppevorm();
+            string eriala = LoeString("  Eriala: ");
 
-            var yl = new Yliopilane(nimi, aasta, koolNimi, kursus, vorm, eriala);
+            double hinne = LoeDouble("  Keskmine hinne: ", 0);
+            int puudumised = LoeInt("  Puudumiste arv: ", 0, 500);
+
+            var yl = new Yliopilane(nimi, aasta, koolNimi, kursus, vorm, eriala, hinne, puudumised);
             kool.LisaInimene(yl);
         }
+        
 
         static void OtsiNime()
         {
@@ -169,8 +176,25 @@ namespace oop_gaponenkoo
 
         static void KuvaPalk()
         {
-            string nimi = LoeString("\nKelle palk? Sisesta nimi: ");
-            kool.KuvaPalk(nimi);
+            string nimi = LoeString("\nSisesta nimi, kelle palka vaadata: ");
+            bool leitud = false;
+
+            foreach (var isik in kool.Inimesed)
+            {
+                if (isik.Nimi.Contains(nimi, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (isik is Opetaja opetaja)
+                    {
+                        Console.Write($"Mitu tundi {isik.Nimi} sel kuul üle töötas? ");
+                        int tunnid = int.Parse(Console.ReadLine() ?? "0");
+
+                        double palk = opetaja.ArvutaPalk(tunnid); 
+                        Console.WriteLine($"{isik.Nimi} kogupalk: {palk:F2} EUR.");
+                        leitud = true;
+                    }
+                }
+            }
+            if (!leitud) Console.WriteLine("Isikut ei leitud.");
         }
 
         static void HindaOpilast()
