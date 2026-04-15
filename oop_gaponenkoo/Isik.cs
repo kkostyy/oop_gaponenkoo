@@ -77,7 +77,7 @@ namespace oop_gaponenkoo
 
         public void KuvaKoik()
         {
-            Console.WriteLine("\n--- KOOLI NIMEKIRI ---");
+            Console.WriteLine("\nKOOLI NIMEKIRI");
             foreach (var isik in inimesed)
             {
                 isik.Kirjelda();
