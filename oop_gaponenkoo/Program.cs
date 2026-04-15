@@ -1,57 +1,183 @@
-﻿namespace oop_gaponenkoo
+using System;
+using System.Collections.Generic;
+
+namespace oop_gaponenkoo
 {
     internal class Program
     {
+        static Koolihaldus kool = new Koolihaldus();
+
         static void Main(string[] args)
         {
-            Console.WriteLine("KOOLIHALDUSE SUSTEEM\n");
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            Opetaja opetaja1 = new Opetaja("Marina", 1995, "Programmeerimine", 15.0, 20);
-            Opetaja opetaja2 = new Opetaja("Jaan", 1980, "Matemaatika", 12.0, 25);
-            Direktor direktor1 = new Direktor("Peeter", 1970, "Ajalugu", 18.0, 10, 500.0);
-            Opilane opilane1 = new Opilane("Yaroslav", 2008, "TTHK", 1, Oppevorm.Paevane);
-            Opilane opilane2 = new Opilane("Mari", 2007, "TTHK", 2, Oppevorm.Kaugope);
-            Yliopilane yliopilane1 = new Yliopilane("Andrei", 2003, "TalTech", 3, Oppevorm.Paevane, "Tarkvaraarendus");
+            bool tooks = true;
+            while (tooks)
+            {
+                Console.WriteLine("\n========= KOOLIHALDUSE SUSTEEM =========");
+                Console.WriteLine("1. Lisa opetaja");
+                Console.WriteLine("2. Lisa direktor");
+                Console.WriteLine("3. Lisa opilane");
+                Console.WriteLine("4. Lisa yliopilane");
+                Console.WriteLine("5. Kuva koik isikud");
+                Console.WriteLine("6. Otsi nime jargi");
+                Console.WriteLine("7. Otsi sunniaaasta jargi");
+                Console.WriteLine("8. Kuva opetaja palk");
+                Console.WriteLine("9. Opetaja hindab opilast");
+                Console.WriteLine("10. Kuva kokku registreeritud isikuid");
+                Console.WriteLine("0. Valju");
+                Console.Write("Vali: ");
 
-            Console.WriteLine("Kirjelda() meetod");
-            opetaja1.Kirjelda();
-            opetaja2.Kirjelda();
-            direktor1.Kirjelda();
-            opilane1.Kirjelda();
-            opilane2.Kirjelda();
-            yliopilane1.Kirjelda();
+                string valik = Console.ReadLine();
 
-            Console.WriteLine("\nTervita() meetod");
-            opetaja1.Tervita();
-            opilane1.Tervita();
+                switch (valik)
+                {
+                    case "1": LisaOpetaja(); break;
+                    case "2": LisaDirektor(); break;
+                    case "3": LisaOpilane(); break;
+                    case "4": LisaYliopilane(); break;
+                    case "5": kool.KuvaKoik(); break;
+                    case "6": OtsiNime(); break;
+                    case "7": OtsiSunniaasta(); break;
+                    case "8": KuvaPalk(); break;
+                    case "9": HindaOpilast(); break;
+                    case "10":
+                        Console.WriteLine($"\nKokku registreeritud: {Isik.InimesteKoguarv} isikut.");
+                        break;
+                    case "0":
+                        tooks = false;
+                        Console.WriteLine("Nagemiseni!");
+                        break;
+                    default:
+                        Console.WriteLine("Vigane valik! Proovi uuesti.");
+                        break;
+                }
+            }
+        }
 
-            Console.WriteLine("\nPalgad");
-            Console.WriteLine($"{opetaja1.Nimi} palk: {opetaja1.ArvutaPalk()} eurot");
-            Console.WriteLine($"{direktor1.Nimi} palk (koos lisatasuga): {direktor1.ArvutaPalk()} eurot");
+        static string LoeString(string kysimus)
+        {
+            while (true)
+            {
+                Console.Write(kysimus);
+                string v = Console.ReadLine()?.Trim();
+                if (!string.IsNullOrEmpty(v)) return v;
+                Console.WriteLine("  Vali ei tohi olla tyhi!");
+            }
+        }
 
-            Console.WriteLine("\nHindamine");
-            opetaja1.Hinda("5");
-            opetaja2.Hinda("3");
+        static int LoeInt(string kysimus, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(kysimus);
+                if (int.TryParse(Console.ReadLine(), out int v) && v >= min && v <= max)
+                    return v;
+                Console.WriteLine($"  Vigane sisestus! Sisesta arv vahemikus {min}-{max}.");
+            }
+        }
 
-            Console.WriteLine($"\nKokku loodi {Isik.InimesteKoguarv} isikut susteemis.");
+        static double LoeDouble(string kysimus, double min)
+        {
+            while (true)
+            {
+                Console.Write(kysimus);
+                string raw = Console.ReadLine()?.Replace(',', '.');
+                if (double.TryParse(raw, System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out double v) && v >= min)
+                    return v;
+                Console.WriteLine($"  Vigane sisestus! Sisesta positiivne arv (min {min}).");
+            }
+        }
 
-            Console.WriteLine("\nKoolihaldus");
-            Koolihaldus minuKool = new Koolihaldus();
+        static Oppevorm LoeOppevorm()
+        {
+            Console.WriteLine("  Oppevorm:");
+            Console.WriteLine("    1 - Paevane");
+            Console.WriteLine("    2 - Kaugope");
+            Console.WriteLine("    3 - Ekstern");
+            Console.WriteLine("    4 - Akadeemiline puhkus");
+            int v = LoeInt("  Vali (1-4): ", 1, 4);
+            return (Oppevorm)(v - 1);
+        }
 
-            minuKool.LisaInimene(opetaja1);
-            minuKool.LisaInimene(direktor1);
-            minuKool.LisaInimene(opilane1);
-            minuKool.LisaInimene(opilane2);
-            minuKool.LisaInimene(yliopilane1);
+        static void LisaOpetaja()
+        {
+            Console.WriteLine("\n--- Lisa opetaja ---");
+            string nimi = LoeString("  Nimi: ");
+            int aasta   = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
+            string aine = LoeString("  Aine: ");
+            double tasu = LoeDouble("  Tunnitasu (EUR): ", 0.01);
+            int tunnid  = LoeInt("  Tunde nadalas: ", 1, 40);
 
-            List<Isik> lisaNimekiri = new List<Isik> { opetaja2 };
-            minuKool.LisaInimene(lisaNimekiri);
+            var op = new Opetaja(nimi, aasta, aine, tasu, tunnid);
+            kool.LisaInimene(op);
+        }
 
-            minuKool.KuvaKoik();
+        static void LisaDirektor()
+        {
+            Console.WriteLine("\n--- Lisa direktor ---");
+            string nimi = LoeString("  Nimi: ");
+            int aasta   = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
+            string aine = LoeString("  Aine: ");
+            double tasu = LoeDouble("  Tunnitasu (EUR): ", 0.01);
+            int tunnid  = LoeInt("  Tunde nadalas: ", 1, 40);
+            double lisa = LoeDouble("  Lisatasu (EUR): ", 0);
 
-            Console.WriteLine("\nOtsing");
-            minuKool.Otsi("Mari");
-            minuKool.Otsi(2008);
+            var dir = new Direktor(nimi, aasta, aine, tasu, tunnid, lisa);
+            kool.LisaInimene(dir);
+        }
+
+        static void LisaOpilane()
+        {
+            Console.WriteLine("\n--- Lisa opilane ---");
+            string nimi     = LoeString("  Nimi: ");
+            int aasta       = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year);
+            string koolNimi = LoeString("  Kooli nimi: ");
+            int klass       = LoeInt("  Klass (1-12): ", 1, 12);
+            Oppevorm vorm   = LoeOppevorm();
+
+            var op = new Opilane(nimi, aasta, koolNimi, klass, vorm);
+            kool.LisaInimene(op);
+        }
+
+        static void LisaYliopilane()
+        {
+            Console.WriteLine("\n--- Lisa yliopilane ---");
+            string nimi     = LoeString("  Nimi: ");
+            int aasta       = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 17);
+            string koolNimi = LoeString("  Kooli/ulikooli nimi: ");
+            int kursus      = LoeInt("  Kursus (1-6): ", 1, 6);
+            Oppevorm vorm   = LoeOppevorm();
+            string eriala   = LoeString("  Eriala: ");
+
+            var yl = new Yliopilane(nimi, aasta, koolNimi, kursus, vorm, eriala);
+            kool.LisaInimene(yl);
+        }
+
+        static void OtsiNime()
+        {
+            string nimi = LoeString("\nOtsitav nimi: ");
+            kool.Otsi(nimi);
+        }
+
+        static void OtsiSunniaasta()
+        {
+            int aasta = LoeInt("\nSisesta sunniaaasta: ", 1900, DateTime.Now.Year);
+            kool.Otsi(aasta);
+        }
+
+        static void KuvaPalk()
+        {
+            string nimi = LoeString("\nKelle palk? Sisesta nimi: ");
+            kool.KuvaPalk(nimi);
+        }
+
+        static void HindaOpilast()
+        {
+            string opetajaNimi = LoeString("\nOpetaja nimi: ");
+            int hinne = LoeInt("Hinne (1-5): ", 1, 5);
+            kool.HindaOpilast(opetajaNimi, hinne.ToString());
         }
     }
 }
