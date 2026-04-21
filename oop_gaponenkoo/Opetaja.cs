@@ -9,6 +9,7 @@ namespace oop_gaponenkoo
         public string Aine { get; set; }
         public double Tunnitasu { get; set; }
         public int TunnidNadalas { get; set; }
+        public int UletunnidKuus { get; set; } = 0;
 
         public Opetaja(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas) : base(nimi, aasta)
         {
@@ -19,7 +20,9 @@ namespace oop_gaponenkoo
 
         public override void Kirjelda()
         {
-            Console.WriteLine($"Mina olen õpetaja {Nimi}, õpetan: {Aine}. Vanus: {Vanus}");
+            double palk = ArvutaPalk(UletunnidKuus);
+            Console.WriteLine($"Mina olen õpetaja {Nimi}, õpetan: {Aine}. Vanus: {Vanus}. " +
+                              $"Ületunnid: {UletunnidKuus}h. Kogupalk: {palk:F2} EUR.");
         }
 
         public virtual double ArvutaPalk(int uletunnid)
@@ -27,7 +30,7 @@ namespace oop_gaponenkoo
             return (Tunnitasu * TunnidNadalas * 4) + (uletunnid * Tunnitasu);
         }
 
-        public double ArvutaPalk() => ArvutaPalk(0);
+        public double ArvutaPalk() => ArvutaPalk(UletunnidKuus);
 
         public void Hinda(string hinne)
         {
@@ -37,7 +40,7 @@ namespace oop_gaponenkoo
 
     public class Direktor : Opetaja
     {
-        public double Lisatasu { get; set; } 
+        public double Lisatasu { get; set; }
 
         public Direktor(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas, double lisatasu)
             : base(nimi, aasta, aine, tunnitasu, tunnidNadalas)
@@ -47,14 +50,16 @@ namespace oop_gaponenkoo
 
         public override void Kirjelda()
         {
-            Console.WriteLine($"Mina olen direktor {Nimi}. Vanus: {Vanus}");
+            double palk = ArvutaPalk(UletunnidKuus);
+            Console.WriteLine($"Mina olen direktor {Nimi}. Vanus: {Vanus}. " +
+                              $"Ületunnid: {UletunnidKuus}h. Kogupalk: {palk:F2} EUR.");
         }
 
-        public virtual double ArvutaPalk(int uletunnid) 
+        public override double ArvutaPalk(int uletunnid)
         {
-            double põhipalk = Tunnitasu * TunnidNadalas * 4;
-            double lisatasu = uletunnid * Tunnitasu; 
-            return põhipalk + lisatasu;
+            double pohipalk = Tunnitasu * TunnidNadalas * 4;
+            double uletasuRaha = uletunnid * Tunnitasu;
+            return pohipalk + uletasuRaha + Lisatasu;
         }
     }
 }

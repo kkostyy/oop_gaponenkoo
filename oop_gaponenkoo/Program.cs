@@ -103,34 +103,46 @@ namespace oop_gaponenkoo
 
         static void LisaOpetaja()
         {
-            Console.WriteLine("\n--- Lisa opetaja ---");
+            Console.WriteLine("\nLisa opetaja");
             string nimi = LoeString("  Nimi: ");
             int aasta = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
             string aine = LoeString("  Aine: ");
             double tasu = LoeDouble("  Tunnitasu (EUR): ", 0.01);
             int tunnid = LoeInt("  Tunde nadalas: ", 1, 40);
+            int uletunnid = LoeInt("  Ületunnid sel kuul (tundides): ", 0, 500);
 
             var op = new Opetaja(nimi, aasta, aine, tasu, tunnid);
+            op.UletunnidKuus = uletunnid;
+
+            double kogupalk = op.ArvutaPalk(uletunnid);
+            Console.WriteLine($"  Kogupalk koos ületundidega: {kogupalk:F2} EUR.");
+
             kool.LisaInimene(op);
         }
 
         static void LisaDirektor()
         {
-            Console.WriteLine("\n--- Lisa direktor ---");
+            Console.WriteLine("\nLisa direktor");
             string nimi = LoeString("  Nimi: ");
-            int aasta   = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
+            int aasta = LoeInt("  Sunniaaasta: ", 1900, DateTime.Now.Year - 18);
             string aine = LoeString("  Aine: ");
             double tasu = LoeDouble("  Tunnitasu (EUR): ", 0.01);
-            int tunnid  = LoeInt("  Tunde nadalas: ", 1, 40);
+            int tunnid = LoeInt("  Tunde nadalas: ", 1, 40);
             double lisa = LoeDouble("  Lisatasu (EUR): ", 0);
+            int uletunnid = LoeInt("  Ületunnid sel kuul (tundides): ", 0, 500);
 
             var dir = new Direktor(nimi, aasta, aine, tasu, tunnid, lisa);
+            dir.UletunnidKuus = uletunnid;
+
+            double kogupalk = dir.ArvutaPalk(uletunnid);
+            Console.WriteLine($"  Kogupalk koos ületundidega: {kogupalk:F2} EUR.");
+
             kool.LisaInimene(dir);
         }
 
         static void LisaOpilane()
         {
-            Console.WriteLine("\n--- Lisa õpilane ---");
+            Console.WriteLine("\nLisa õpilane");
             string nimi = LoeString("  Nimi: ");
             int aasta = LoeInt("  Sünniaasta: ", 1900, DateTime.Now.Year);
             string koolNimi = LoeString("  Kooli nimi: ");
@@ -146,7 +158,7 @@ namespace oop_gaponenkoo
 
         static void LisaYliopilane()
         {
-            Console.WriteLine("\n--- Lisa üliõpilane ---");
+            Console.WriteLine("\nLisa üliõpilane");
             string nimi = LoeString("  Nimi: ");
             int aasta = LoeInt("  Sünniaasta: ", 1900, DateTime.Now.Year - 17);
             string koolNimi = LoeString("  Ülikooli nimi: ");
@@ -160,7 +172,6 @@ namespace oop_gaponenkoo
             var yl = new Yliopilane(nimi, aasta, koolNimi, kursus, vorm, eriala, hinne, puudumised);
             kool.LisaInimene(yl);
         }
-        
 
         static void OtsiNime()
         {
@@ -185,11 +196,8 @@ namespace oop_gaponenkoo
                 {
                     if (isik is Opetaja opetaja)
                     {
-                        Console.Write($"Mitu tundi {isik.Nimi} sel kuul üle töötas? ");
-                        int tunnid = int.Parse(Console.ReadLine() ?? "0");
-
-                        double palk = opetaja.ArvutaPalk(tunnid); 
-                        Console.WriteLine($"{isik.Nimi} kogupalk: {palk:F2} EUR.");
+                        double palk = opetaja.ArvutaPalk(opetaja.UletunnidKuus);
+                        Console.WriteLine($"{isik.Nimi} kogupalk (ületunnid: {opetaja.UletunnidKuus}h): {palk:F2} EUR.");
                         leitud = true;
                     }
                 }
