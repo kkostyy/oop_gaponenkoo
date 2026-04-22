@@ -82,8 +82,22 @@ namespace oop_gaponenkoo
 
         public void LisaInimene(List<Isik> uuedInimesed)
         {
+            // Näitame mis oli enne (vanaInimesed)
+            Console.WriteLine($"\nNimekiri ENNE lisamist ({inimesed.Count} isikut):");
+            if (inimesed.Count == 0)
+                Console.WriteLine("  (nimekiri on tühi)");
+            else
+                foreach (var isik in inimesed)
+                    Console.WriteLine($"  - {isik.Nimi}");
+
             inimesed.AddRange(uuedInimesed);
-            Console.WriteLine($"Lisati {uuedInimesed.Count} uut inimest.");
+
+            // Näitame mis lisati (uuedInimesed)
+            Console.WriteLine($"\nLisati {uuedInimesed.Count} uut isikut:");
+            foreach (var isik in uuedInimesed)
+                Console.WriteLine($"  + {isik.Nimi}");
+
+            Console.WriteLine($"\nNimekiri PÄRAST lisamist ({inimesed.Count} isikut kokku).");
         }
 
         public void KuvaKoik()
@@ -99,7 +113,7 @@ namespace oop_gaponenkoo
         {
             bool leitud = false;
 
-            //1. Kui 4-kohaline number → otsime sünniaasta järgi
+            // 1. Kui 4-kohaline number → otsime sünniaasta järgi
             if (int.TryParse(sisend, out int aasta) && sisend.Length == 4)
             {
                 Console.WriteLine($"\nOtsime sünniaasta järgi: {aasta}");
@@ -112,7 +126,7 @@ namespace oop_gaponenkoo
                     }
                 }
             }
-            //2. Kui roll-sõna → otsime tüübi järgi
+            // 2. Kui roll-sõna → otsime tüübi järgi
             else if (sisend.Equals("opetaja", StringComparison.OrdinalIgnoreCase) ||
                      sisend.Equals("õpetaja", StringComparison.OrdinalIgnoreCase))
             {
@@ -140,7 +154,7 @@ namespace oop_gaponenkoo
                 foreach (var isik in inimesed)
                     if (isik is Yliopilane) { isik.Kirjelda(); leitud = true; }
             }
-            //3. Muul juhul → otsime nime järgi
+            // 3. Muul juhul → otsime nime järgi
             else
             {
                 Console.WriteLine($"\nOtsime nime järgi: {sisend}");
