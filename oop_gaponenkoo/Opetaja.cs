@@ -10,6 +10,7 @@ namespace oop_gaponenkoo
         public double Tunnitasu { get; set; }
         public int TunnidNadalas { get; set; }
         public int UletunnidKuus { get; set; } = 0;
+        public ValjamakseTyyp ValjamakseTyyp { get; set; } = ValjamakseTyyp.Palk;
 
         public Opetaja(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas) : base(nimi, aasta)
         {
@@ -36,7 +37,7 @@ namespace oop_gaponenkoo
         {
             Console.WriteLine($"Õpetaja {Nimi} pani hinde: {hinne}");
         }
-    }
+    } 
 
     public class Direktor : Opetaja
     {
@@ -63,3 +64,4 @@ namespace oop_gaponenkoo
         }
     }
 }
+
