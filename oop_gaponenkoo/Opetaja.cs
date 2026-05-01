@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace oop_gaponenkoo
 {
@@ -8,60 +6,36 @@ namespace oop_gaponenkoo
     {
         public string Aine { get; set; }
         public double Tunnitasu { get; set; }
-        public int TunnidNadalas { get; set; }
-        public int UletunnidKuus { get; set; } = 0;
+        public int TunnidKuus { get; set; }
         public ValjamakseTyyp ValjamakseTyyp { get; set; } = ValjamakseTyyp.Palk;
 
-        public Opetaja(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas) : base(nimi, aasta)
+        public Opetaja() : base() { }
+
+        public Opetaja(string nimi, string aine, double tunnitasu, int tunnidKuus) : base(nimi)
         {
             Aine = aine;
             Tunnitasu = tunnitasu;
-            TunnidNadalas = tunnidNadalas;
+            TunnidKuus = tunnidKuus;
         }
 
-        public override void Kirjelda()
+        public override string Kirjelda()
         {
-            double palk = ArvutaPalk(UletunnidKuus);
-            Console.WriteLine($"Mina olen õpetaja {Nimi}, õpetan: {Aine}. Vanus: {Vanus}. " +
-                              $"Ületunnid: {UletunnidKuus}h. Kogupalk: {palk:F2} EUR.");
+            return $"Mina olen õpetaja {Nimi} ja ma õpetan: {Aine}. Vanus: {Vanus}.";
         }
 
-        public virtual double ArvutaPalk(int uletunnid)
+        public void Opeta()
         {
-            return (Tunnitasu * TunnidNadalas * 4) + (uletunnid * Tunnitasu);
+            Console.WriteLine($"{Nimi} õpetab ainet: {Aine}.");
         }
 
-        public double ArvutaPalk() => ArvutaPalk(UletunnidKuus);
+        public virtual double ArvutaPalk()
+        {
+            return Tunnitasu * TunnidKuus;
+        }
 
         public void Hinda(string hinne)
         {
             Console.WriteLine($"Õpetaja {Nimi} pani hinde: {hinne}");
         }
-    } 
-
-    public class Direktor : Opetaja
-    {
-        public double Lisatasu { get; set; }
-
-        public Direktor(string nimi, int aasta, string aine, double tunnitasu, int tunnidNadalas, double lisatasu)
-            : base(nimi, aasta, aine, tunnitasu, tunnidNadalas)
-        {
-            Lisatasu = lisatasu;
-        }
-
-        public override void Kirjelda()
-        {
-            double palk = ArvutaPalk(UletunnidKuus);
-            Console.WriteLine($"Mina olen direktor {Nimi}. Vanus: {Vanus}. " +
-                              $"Ületunnid: {UletunnidKuus}h. Kogupalk: {palk:F2} EUR.");
-        }
-
-        public override double ArvutaPalk(int uletunnid)
-        {
-            double pohipalk = Tunnitasu * TunnidNadalas * 4;
-            double uletasuRaha = uletunnid * Tunnitasu;
-            return pohipalk + uletasuRaha + Lisatasu;
-        }
     }
 }
-
